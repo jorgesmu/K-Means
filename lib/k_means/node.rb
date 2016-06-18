@@ -1,10 +1,10 @@
 class Node
 
   class << self
-    def create_nodes(data, similarity_measure)
+    def create_nodes(data, &similarity_measure)
       nodes = []
       data.each do |position|
-        nodes << new(position, similarity_measure)
+        nodes << new(position, &similarity_measure)
       end
       nodes
     end
@@ -12,7 +12,7 @@ class Node
 
   attr_accessor :position, :best_distance, :closest_centroid
 
-  def initialize(position, similarity_measure)
+  def initialize(position, &similarity_measure)
     @position = position
     @similarity_measure = similarity_measure
   end
@@ -58,9 +58,9 @@ class Node
 
   def calculate_distance(centroid)
     begin
-      @position.send(@similarity_measure, centroid.position)
+      @similarity_measure.call @position, centroid.position
     rescue NoMethodError
-      raise "Hey, '#{@similarity_measure}' is not a measurement. Read the REAdME for available measurements"
+      raise "Hey, the distance block is failing"
     end
   end
 

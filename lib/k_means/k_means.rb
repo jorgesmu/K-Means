@@ -4,9 +4,9 @@ class KMeans
 
   attr_reader :centroids, :nodes, :max_iterations
 
-  def initialize(data, options={})
-    distance_measure = options[:distance_measure] || :euclidean_distance
-    @nodes = Node.create_nodes(data, distance_measure)
+  def initialize(data, options, &block)
+    distance_measure = block
+    @nodes = Node.create_nodes(data, &distance_measure)
     @centroids = options[:custom_centroids] ||
       Centroid.create_centroids(options[:centroids] || 4, @nodes)
     @verbose = options[:verbose]
